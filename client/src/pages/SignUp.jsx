@@ -23,7 +23,7 @@ const SignUp = () => {
   };
 
   const handlechange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setUserData({ ...userData, [e.target.name]: e.target.value.trim() }); // trim for to remove space
   };
 
   return (
