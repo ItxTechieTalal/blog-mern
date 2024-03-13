@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"; // Import Axios
+import axios from "axios";
+import { Alert , Spinner} from 'flowbite-react';
+
 
 const SignUp = () => {
   const [userData, setUserData] = useState({
@@ -8,16 +10,26 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!userData.username || !userData.email || !userData.password) {
+      console.log("Please fill all the fields");
+    }
     try {
+      setLoading(true);
       const res = await axios.post("api/auth/signup", userData); // Use axios.post instead of fetch
       console.log(res);
-      console.log(res.data); // Access response data directly
+      console.log(res.data);
+      setSuccessMessage('Signup successful')
+      setErrorMessage(null);
+       setLoading(false)
     } catch (error) {
+      setErrorMessage(error.message + ". Email and username should be unique.");
+      setLoading(false)
       console.log(error);
     }
   };
@@ -58,7 +70,7 @@ const SignUp = () => {
               onChange={(e) => handlechange(e)}
               required
               type="text"
-              name="username"
+              name="username" 
               id="username"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder="Username"
@@ -89,18 +101,31 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Submit
+            className="text-white bg-blue-700 mb-2 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          disabled={loading}
+          >{
+            loading? (
+              <div className="flex gap-5 items-center ">
+              <Spinner className="mb-[0.15rem] " size={'sm'}/>  
+              <span>Loading</span>  
+              </div>
+            ): 'Sign Up'
+          }
           </button>
+          {
+            errorMessage && <Alert className="my-2" color="failure">{errorMessage}</Alert>
+          }
+          {
+            successMessage && <Alert className="my-2" color="success">{successMessage}</Alert>
+          }
         </form>
         <div className="flex gap-2">
           <span>Have an account? </span>
           <Link className="text-blue-500" to={"/sign-in"}>
-            Sign in
+            Sign in 
           </Link>
         </div>
-      </div>
+      </div>  
     </div>
   );
 };

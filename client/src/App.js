@@ -7,8 +7,9 @@ import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import Header from './components/Header'
 import Blogs from './pages/Blogs'
+import Footerfunc from './components/Footer'
 const App = () => {
-  return (
+  return ( 
     <BrowserRouter>
     <Header/>
     <Routes>
@@ -20,6 +21,7 @@ const App = () => {
 <Route path='/dashboard' element={<Dashboard/>}></Route>
       App 
     </Routes>
+    <Footerfunc/>
     </BrowserRouter>
   )
 }
